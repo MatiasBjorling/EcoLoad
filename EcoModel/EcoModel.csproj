@@ -33,41 +33,41 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.1.0.39271, Culture=neutral, PublicKeyToken=3a9cab8f8d22bfb7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\Antlr3.Runtime.dll</HintPath>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\Libs\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL" />
-    <Reference Include="FluentNHibernate, Version=1.2.0.694, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\FluentNHibernate.dll</HintPath>
+    <Reference Include="Castle.Core">
+      <HintPath>..\Libs\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\Libs\FluentNHibernate.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\EcoShared\Libs\GeoAPI.dll</HintPath>
+      <HintPath>..\Libs\GeoAPI.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.3.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="NetTopologySuite">
-      <HintPath>..\EcoShared\Libs\NetTopologySuite.dll</HintPath>
+      <HintPath>..\Libs\NetTopologySuite.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
-    <Reference Include="NHibernate.ByteCode.Castle, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
+    <Reference Include="NHibernate">
+      <HintPath>..\Libs\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\Libs\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate.Caches.SysCache">
-      <HintPath>Libs\NHibernate.Caches.SysCache.dll</HintPath>
+      <HintPath>..\Libs\NHibernate.Caches.SysCache.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.Spatial, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\NHibernate.Spatial.dll</HintPath>
+    <Reference Include="NHibernate.Spatial">
+      <HintPath>..\Libs\NHibernate.Spatial.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.Spatial.MsSql2008, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\NHibernate.Spatial.MsSql2008.dll</HintPath>
+    <Reference Include="NHibernate.Spatial.MsSql2008">
+      <HintPath>..\Libs\NHibernate.Spatial.MsSql2008.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.Validator, Version=1.2.0.3001, Culture=neutral, PublicKeyToken=70154e18752585bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\NHibernate.Validator.dll</HintPath>
+    <Reference Include="NHibernate.Validator">
+      <HintPath>..\Libs\NHibernate.Validator.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Data.Linq">
-      <HintPath>Libs\Remotion.Data.Linq.dll</HintPath>
+      <HintPath>..\Libs\Remotion.Data.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
