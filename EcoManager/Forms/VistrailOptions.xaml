@@ -1,0 +1,16 @@
+﻿<Window x:Class="EcoManager.Forms.VistrailOptions"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Visualization Options" Height="147" Width="426" Icon="/EcoManager;component/Resources/favicon.ico">
+    <Grid>
+        <Label Content="Workflow version" Height="28" HorizontalAlignment="Left" Margin="12,46,0,0" Name="lblVersion" VerticalAlignment="Top" />
+        <ComboBox Height="23" HorizontalAlignment="Left" Margin="120,46,0,0" Name="cmbWorkflows" VerticalAlignment="Top" Width="279" ItemsSource="{Binding ActionAnnotations}" />
+        <Button Content="Show" Height="23" HorizontalAlignment="Left" Margin="324,75,0,0" Name="btnShow" VerticalAlignment="Top" Width="75" IsDefault="True" Click="btnShow_Click" />
+        <Button Content="Close" Height="23" HorizontalAlignment="Left" Margin="12,75,0,0" Name="btnClose" VerticalAlignment="Top" Width="75" IsCancel="True" Click="btnClose_Click" />
+        <Label Content="Data Source" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" />
+        <ComboBox Height="23" HorizontalAlignment="Left"  Margin="120,17,0,0" Name="cmbDataSource" VerticalAlignment="Top" Width="279" SelectionChanged="cmbDataSource_SelectionChanged">
+            <ComboBoxItem Content="Cassiope" />
+            <ComboBoxItem Content="Snow" />
+        </ComboBox>
+    </Grid>
+</Window>

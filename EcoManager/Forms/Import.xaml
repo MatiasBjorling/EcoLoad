@@ -1,0 +1,127 @@
+﻿<UserControl x:Class="EcoManager.Forms.Import"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Enums="clr-namespace:EcoManager.Data.Enums;assembly=EcoModel" xmlns:ViewModel="clr-namespace:EcoManager.Forms.ViewModel" xmlns:NonRel="clr-namespace:EcoManager.Data.Entities.NonRel;assembly=EcoModel" xmlns:Controls="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended" mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance {x:Type ViewModel:ImportViewModel}}" d:DesignHeight="400" d:DesignWidth="584">
+    <Grid>
+                    <Button Content="Choose File" Height="23" Margin="0,6,81,0" Name="btnChooseFile" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="btnChooseFile_Click" />
+                    <DataGrid Margin="4,150,8,35" Name="dgPreview" AutoGenerateColumns="True" CanUserResizeRows="False" SelectionMode="Single" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" AlternatingRowBackground="#FFE3ECFF" CanUserReorderColumns="False" CanUserSortColumns="False" HeadersVisibility="All">
+                    	<DataGrid.Resources>
+                            <ObjectDataProvider MethodName="GetValues" 
+												ObjectType="{x:Type Enums:StorageTypes}"
+												x:Key="StorageTypes">
+                                <ObjectDataProvider.MethodParameters>
+                                    <x:Type TypeName="Enums:StorageTypes" />
+                                </ObjectDataProvider.MethodParameters>
+                            </ObjectDataProvider>
+							<ObjectDataProvider MethodName="GetValues" 
+												ObjectType="{x:Type Enums:TimeTypes}"
+												x:Key="TimeTypes">
+                                <ObjectDataProvider.MethodParameters>
+                                    <x:Type TypeName="Enums:TimeTypes" />
+                                </ObjectDataProvider.MethodParameters>
+                            </ObjectDataProvider>
+							<ObjectDataProvider MethodName="GetValues" 
+												ObjectType="{x:Type Enums:TimeEndings}"
+												x:Key="TimeEndings">
+                                <ObjectDataProvider.MethodParameters>
+                                    <x:Type TypeName="Enums:TimeEndings" />
+                                </ObjectDataProvider.MethodParameters>
+                            </ObjectDataProvider>
+							<ObjectDataProvider MethodName="GetValues" 
+												ObjectType="{x:Type Enums:GeographyNames}"
+												x:Key="GeographyNames">
+                                <ObjectDataProvider.MethodParameters>
+                                    <x:Type TypeName="Enums:GeographyNames" />
+                                </ObjectDataProvider.MethodParameters>
+                            </ObjectDataProvider>
+
+                            <DataTemplate x:Key="ColumnHeaderDataTemplate">
+                                <Grid x:Name="ColumnGrid" Width="150" d:DataContext="{d:DesignInstance {x:Type NonRel:ImportColumn}}">
+		                            <Grid.RowDefinitions>
+		                                <RowDefinition Height="*"/>
+		                                <RowDefinition Height="*"/>
+										<RowDefinition Height="*"/>
+										<RowDefinition Height="*"/>
+		                            </Grid.RowDefinitions>
+		                            <Grid.ColumnDefinitions>
+		                                <ColumnDefinition Width="0.377*"/>
+		                                <ColumnDefinition Width="0.623*"/>
+		                            </Grid.ColumnDefinitions>
+									<TextBlock Grid.Row="0" Text="Name" HorizontalAlignment="Left" VerticalAlignment="Stretch"  d:LayoutOverrides="Height" />
+		                            <TextBox Grid.Row="0" Grid.Column="1" Width="94" HorizontalAlignment="Left" Margin="0,0,0,2" Name="txtColumnName" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+									<TextBlock Grid.Row="1" Text="Type" HorizontalAlignment="Left" VerticalAlignment="Stretch"  d:LayoutOverrides="Height"/>
+                                    <ComboBox Grid.Row="1" Grid.Column="1" Width="94" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource StorageTypes}}" Margin="0,0,0,2" Name="cmbDataType" SelectedItem="{Binding StorageType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+                                    <Grid Grid.Row="2" Grid.ColumnSpan="2" x:Name="TemporalGroup" Visibility="Collapsed">
+										<Grid.RowDefinitions>
+		                                <RowDefinition Height="*"/>
+		                                <RowDefinition Height="*"/>
+										<RowDefinition Height="*"/>
+										<RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+		                            </Grid.RowDefinitions>
+										<Grid.ColumnDefinitions>
+			                                <ColumnDefinition Width="0.377*"/>
+			                                <ColumnDefinition Width="0.623*"/>
+			                            </Grid.ColumnDefinitions>
+										<TextBlock Grid.Row="0" Text="Group" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,3.333,0,2.666" d:LayoutOverrides="Height"  />
+                                        <Controls:NumericUpDown Grid.Row="0" Grid.Column="1" Width="94" HorizontalAlignment="Left" Margin="0,0,0,2" Name="numTemporalGroup" Maximum="100" Minimum="0" Value="{Binding GroupId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+
+                                        <TextBlock Grid.Row="1" Text="Format" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,3.333,0,2.666"  />
+                                        <TextBox Grid.Row="1" Grid.Column="1" Width="94" Text="{Binding DateFormat, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,0,0,2" d:LayoutOverrides="Height"/>
+                                        
+                                        <TextBlock Grid.Row="2" Text="Subtype" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,3.333,0,2.666" d:LayoutOverrides="Height" />
+                                        <ComboBox Grid.Row="2" Grid.Column="1" Width="94" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource TimeTypes}}" Margin="0,0,0,2" Name="cmbTemporalSubType" SelectedItem="{Binding TemporalType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                        
+                                        <Grid Grid.Row="3" Grid.ColumnSpan="2" x:Name="TemporalSubPartOfGroup" Visibility="Collapsed">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.377*"/>
+                                                <ColumnDefinition Width="0.623*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Part of" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,3.333,0,2.666" d:LayoutOverrides="Height"/>
+                                            <ComboBox Grid.Column="1" Width="94" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource TimeEndings}}" Margin="0,0,0,2" Name="cmbTemporalPartOf" SelectedItem="{Binding TemporalEndingType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                        </Grid>
+                                    </Grid>
+									
+									<Grid Grid.Row="3" Grid.ColumnSpan="2" x:Name="SpatialGroup" Visibility="Collapsed">
+										<Grid.RowDefinitions>
+		                                <RowDefinition Height="*"/>
+		                                <RowDefinition Height="*"/>
+										<RowDefinition Height="*"/>
+										<RowDefinition Height="*"/>
+		                            </Grid.RowDefinitions>
+										<Grid.ColumnDefinitions>
+			                                <ColumnDefinition Width="0.377*"/>
+			                                <ColumnDefinition Width="0.623*"/>
+			                            </Grid.ColumnDefinitions>
+										<TextBlock Grid.Row="0" Text="Group" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,3.333,0,2.666" d:LayoutOverrides="Height"/>
+                                        <Controls:NumericUpDown Grid.Row="0" Grid.Column="1" Width="94" HorizontalAlignment="Left" Margin="0,0,0,2" Name="numSpatialGroup" Maximum="100" Minimum="0" Value="{Binding GroupId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+										<TextBlock Grid.Row="1" Text="Col. Type" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,3.333,0,2.666" d:LayoutOverrides="Height"/>
+                                        <ComboBox Grid.Row="1" Grid.Column="1" Width="94" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource GeographyNames}}" Margin="0,0,0,2" Name="cmbSpatialGeoType" SelectedItem="{Binding SpatialGeoType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+									</Grid>
+		                        </Grid>
+                    		</DataTemplate>
+                    	</DataGrid.Resources>          
+                    </DataGrid>
+                    <TextBox Height="23" Margin="28,6,161,0" Name="txtFilePath" VerticalAlignment="Top" />
+                    <Label Content="File" Height="23" HorizontalAlignment="Left" Margin="0,4,0,0" x:Name="lblFile" VerticalAlignment="Top"/>
+                    <Label Content="Preview" Height="28" HorizontalAlignment="Left" Margin="0,122,0,0" x:Name="lblPreview" VerticalAlignment="Top" />
+                    <Button Content="Import" Margin="0,0,6,8" Name="btnImport" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" Click="btnImport_Click" IsDefault="True" />
+                    <GroupBox Header="Options" Margin="0,35,8.21,0" x:Name="grpOptions" Height="61" VerticalAlignment="Top" Width="207" HorizontalAlignment="Right">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.709*" />
+                                <ColumnDefinition Width="0.291*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="10,6,0,0" Name="txtDelimiter" VerticalAlignment="Top" Width="38" Grid.Column="1" Text="{Binding CharDelimiter}" />
+                            <Label Content="Delimiter"  Height="28" HorizontalAlignment="Left" Margin="6,4,0,0" Name="lblDelimiter" VerticalAlignment="Top" />
+                        </Grid>
+                    </GroupBox>
+                    <Button Content="Load" Height="23" Margin="0,6,14,0" Name="btnLoad" VerticalAlignment="Top" Click="btnLoad_Click" HorizontalAlignment="Right" Width="61" />
+                    <TextBox Height="24" Margin="4,98,8,0" TextWrapping="Wrap" Text="{Binding Path=Data.TableDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" VerticalAlignment="Top" Name="txtDescription"/>
+                    <Label Content="Description" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,72.04,0,0"/>
+        <Button Content="Close" HorizontalAlignment="Left" Margin="4,0,0,8" Name="btnClose" Width="75" Height="23" VerticalAlignment="Bottom" IsCancel="True" Click="btnClose_Click" />
+    </Grid>
+</UserControl>

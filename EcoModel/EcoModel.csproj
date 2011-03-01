@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2CB8AB5B-230D-46E2-BF2B-6A9A8B888A7C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EcoManager.Data</RootNamespace>
+    <AssemblyName>EcoModel</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.1.0.39271, Culture=neutral, PublicKeyToken=3a9cab8f8d22bfb7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL" />
+    <Reference Include="FluentNHibernate, Version=1.2.0.694, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\EcoShared\Libs\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.3.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\EcoShared\Libs\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
+    <Reference Include="NHibernate.ByteCode.Castle, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
+    <Reference Include="NHibernate.Caches.SysCache">
+      <HintPath>Libs\NHibernate.Caches.SysCache.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Spatial, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\NHibernate.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Spatial.MsSql2008, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\NHibernate.Spatial.MsSql2008.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Validator, Version=1.2.0.3001, Culture=neutral, PublicKeyToken=70154e18752585bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\NHibernate.Validator.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>Libs\Remotion.Data.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Dataset.cs" />
+    <Compile Include="Entities\DatasetGroup.cs" />
+    <Compile Include="Entities\DatasetProgram.cs" />
+    <Compile Include="Entities\SpatialInfo.cs" />
+    <Compile Include="Entities\TemporalBase.cs" />
+    <Compile Include="Entities\Interfaces\IAuditable.cs" />
+    <Compile Include="Entities\NonRel\DatasetHolder.cs" />
+    <Compile Include="Entities\NonRel\ImportColumn.cs" />
+    <Compile Include="Entities\NonRel\ImportExport\WorkEntity.cs" />
+    <Compile Include="Entities\SchemaInfo.cs" />
+    <Compile Include="Entities\SchemaColumn.cs" />
+    <Compile Include="Entities\TableInfo.cs" />
+    <Compile Include="Entities\TemporalInterval.cs" />
+    <Compile Include="Entities\TemporalLength.cs" />
+    <Compile Include="Entities\TemporalPoint.cs" />
+    <Compile Include="Entities\Vistrail\ActionAnnotation.cs" />
+    <Compile Include="Entities\Vistrail\Vistrail.cs" />
+    <Compile Include="Enums\GeographyNames.cs" />
+    <Compile Include="Enums\StorageTypes.cs" />
+    <Compile Include="Enums\TimeEndings.cs" />
+    <Compile Include="Enums\TimeTypes.cs" />
+    <Compile Include="Factories\TemporalFactory.cs" />
+    <Compile Include="Management\UnitOfWork.cs" />
+    <Compile Include="Management\UnitOfWorkFactory.cs" />
+    <Compile Include="Management\UnitOfWorkImpl.cs" />
+    <Compile Include="Manipulation\TableManager.cs" />
+    <Compile Include="Manipulation\RepositoryManager.cs" />
+    <Compile Include="Mappings\DatasetGroupMap.cs" />
+    <Compile Include="Mappings\DatasetMap.cs" />
+    <Compile Include="Mappings\DatasetProgramMap.cs" />
+    <Compile Include="Mappings\SchemaColumnMap.cs" />
+    <Compile Include="Mappings\SchemaInfoMap.cs" />
+    <Compile Include="Mappings\SpatialInfoMap.cs" />
+    <Compile Include="Mappings\TableInfoMap.cs" />
+    <Compile Include="Mappings\TemporalIntervalMap.cs" />
+    <Compile Include="Mappings\TemporalLengthMap.cs" />
+    <Compile Include="Mappings\TemporalPointMap.cs" />
+    <Compile Include="Mappings\Vistrail\ActionAnnotationMap.cs" />
+    <Compile Include="Mappings\Vistrail\VistrailMap.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Proxies\AuditInterceptor.cs" />
+    <Compile Include="Proxies\BindableObject.cs" />
+    <Compile Include="Proxies\ConvetionMessageInterpolator.cs" />
+    <Compile Include="Proxies\DataBindingFactory.cs" />
+    <Compile Include="Proxies\DataBindingIntercepter.cs" />
+    <Compile Include="Proxies\ExtendedWithNotifyProxyFactoryFactory.cs" />
+    <Compile Include="Types\XmlType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EcoShared\EcoShared.csproj">
+      <Project>{D6AB95DF-5DBD-4EF1-82DE-3065F3B855C1}</Project>
+      <Name>EcoShared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\ValidationTexts.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
