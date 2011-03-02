@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoModel", "EcoModel\EcoMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoShared", "EcoShared\EcoShared.csproj", "{D6AB95DF-5DBD-4EF1-82DE-3065F3B855C1}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "EcoSetup", "EcoSetup\EcoSetup.vdproj", "{7B6C44F8-AF0C-495E-86E6-6D465636FFDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,12 @@ Global
 		{D6AB95DF-5DBD-4EF1-82DE-3065F3B855C1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D6AB95DF-5DBD-4EF1-82DE-3065F3B855C1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D6AB95DF-5DBD-4EF1-82DE-3065F3B855C1}.Release|x86.ActiveCfg = Release|Any CPU
+		{7B6C44F8-AF0C-495E-86E6-6D465636FFDB}.Debug|Any CPU.ActiveCfg = Debug
+		{7B6C44F8-AF0C-495E-86E6-6D465636FFDB}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{7B6C44F8-AF0C-495E-86E6-6D465636FFDB}.Debug|x86.ActiveCfg = Debug
+		{7B6C44F8-AF0C-495E-86E6-6D465636FFDB}.Release|Any CPU.ActiveCfg = Release
+		{7B6C44F8-AF0C-495E-86E6-6D465636FFDB}.Release|Mixed Platforms.ActiveCfg = Release
+		{7B6C44F8-AF0C-495E-86E6-6D465636FFDB}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -80,6 +80,7 @@
       <HintPath>..\Libs\Remotion.Data.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -125,7 +126,6 @@
     <Page Include="Forms\Import.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
     <Page Include="Forms\ImportExportProgress.xaml">
       <SubType>Designer</SubType>
@@ -152,7 +152,6 @@
     </Compile>
     <Compile Include="Forms\Import.xaml.cs">
       <DependentUpon>Import.xaml</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Forms\ImportExportProgress.xaml.cs">
       <DependentUpon>ImportExportProgress.xaml</DependentUpon>

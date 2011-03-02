@@ -38,12 +38,9 @@ namespace EcoManager.Data.Manipulation
                 // Let's create the query))
                 foreach (SchemaColumn sc in si.Columns)
                 {
-
-
                     if (sc.Type == StorageTypes.Text)
                     {
                         selects.Append("nref.value('" + sc.OrigName + "[1]', 'NVARCHAR(MAX)') '" + sc.Name + "', ");
-
                     }
 
                     if (sc.Type == StorageTypes.Float)
@@ -100,8 +97,6 @@ namespace EcoManager.Data.Manipulation
                 UnitOfWork.CurrentSession.CreateSQLQuery(secondfinalSQL).ExecuteUpdate();
             }
             
-
-
             return "tmpVizStorage";
         }
     }

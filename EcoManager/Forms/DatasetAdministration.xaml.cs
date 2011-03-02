@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -16,6 +18,8 @@ using EcoManager.Data.Management;
 using EcoManager.Data.Manipulation;
 using EcoManager.Forms.ViewModel;
 using EcoManager.Shared.Tools;
+using MessageBox = System.Windows.MessageBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace EcoManager.Forms
 {
@@ -191,5 +195,34 @@ namespace EcoManager.Forms
         }
 
 
+        private void ExportCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            
+            saveFileDialog.Filter = "CSV File(*.csv)|*.*";
+
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            TableManager tm = new TableManager();
+            tm.CreateRawTable((int)e.Parameter);
+
+            string path = ConfigurationManager.AppSettings["CMDSQLPath"];
+
+            string savePath = saveFileDialog.FileName;
+            if (!savePath.Contains(".csv"))
+                savePath += ".csv";
+            
+
+            Process p = new Process();
+            p.StartInfo.FileName = "sqlcmd";
+            p.StartInfo.Arguments =
+                "-S (local)\\SQL2008  -d DMU -E -Q \"SET NOCOUNT ON; SELECT * FROM tmpVizStorage\"  -s\";\" -w 999 -W -o " +
+                savePath;
+            p.StartInfo.WorkingDirectory = path;
+            p.StartInfo.UseShellExecute = true;
+            p.Start();
+
+            Logger.Message("The data has been exported.");
+        }
     }
 }

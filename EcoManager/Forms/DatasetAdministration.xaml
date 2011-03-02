@@ -6,7 +6,7 @@
     <UserControl.CommandBindings>
         <CommandBinding x:Name="ShowCommand" Command="BrowseForward" Executed="ShowCommand_Executed"/>
         <CommandBinding x:Name="ReplaceCommand" Command="Replace" Executed="ReplaceCommand_Executed"/>
-        <CommandBinding x:Name="VisualizeCommand" Command="BrowseBack" Executed="VisualizeCommand_Executed"/>
+        <CommandBinding x:Name="ExportCommand" Command="BrowseBack" Executed="ExportCommand_Executed"/>
     </UserControl.CommandBindings>
     <UserControl.Resources>
 		<SolidColorBrush x:Key="ListBorder" Color="#828790"/>
@@ -117,7 +117,8 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="Show" Command="BrowseForward" CommandParameter="{Binding Path=Id}" Margin="0,0,2,0" />
                                 <Button Content="Replace" Command="Replace" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />
-                                <Button Content="Visualize" Command="BrowseBack" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />
+                                <!--<Button Content="Visualize" Command="BrowseBack" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />-->
+                                <Button Content="Export" Command="BrowseBack" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

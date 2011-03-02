@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Data.SqlClient;
 
 namespace EcoManager.Shared.DataAccess
@@ -14,7 +15,8 @@ namespace EcoManager.Shared.DataAccess
   //              if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv")
     //                return null;
 //#endif
-                return Properties.Settings.Default.ConnectionString;
+
+                return ConfigurationManager.AppSettings["ConnectionString"];
             }
         }
 
