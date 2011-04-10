@@ -98,6 +98,7 @@
     <Compile Include="Entities\Vistrail\ActionAnnotation.cs" />
     <Compile Include="Entities\Vistrail\Vistrail.cs" />
     <Compile Include="Enums\GeographyNames.cs" />
+    <Compile Include="Enums\ImportType.cs" />
     <Compile Include="Enums\StorageTypes.cs" />
     <Compile Include="Enums\TimeEndings.cs" />
     <Compile Include="Enums\TimeTypes.cs" />

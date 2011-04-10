@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using EcoManager.Data.Entities;
+using EcoManager.Data.Enums;
 using EcoManager.Data.Management;
 using EcoManager.Data.Manipulation;
 using EcoManager.Forms.ViewModel;
@@ -174,6 +168,10 @@ namespace EcoManager.Forms
                 return;
             }
 
+            if (MessageBox.Show("Everything under this tree will be deleted. Including all data. Are you sure?", "Delete?",
+                            MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.No) == MessageBoxResult.No)
+                return;
+
             var dsvm = (DatasetViewModel)datasetView.SelectedItem;
 
             var parent = dsvm.Parent;
@@ -211,18 +209,40 @@ namespace EcoManager.Forms
             string savePath = saveFileDialog.FileName;
             if (!savePath.Contains(".csv"))
                 savePath += ".csv";
+
+            //make sure we backup to a unique name
             
+            
+            FileInfo fInfo = new FileInfo(savePath);
 
             Process p = new Process();
             p.StartInfo.FileName = "sqlcmd";
             p.StartInfo.Arguments =
-                "-S (local)\\SQL2008  -d DMU -E -Q \"SET NOCOUNT ON; SELECT * FROM tmpVizStorage\"  -s\";\" -w 999 -W -o " +
-                savePath;
+                "-S (local)\\SQL2008  -d DMU -E -Q \"SET NOCOUNT ON; SELECT * FROM tmpVizStorage\"  -s\";\" -w 999 -W -o " + ConfigurationManager.AppSettings["TMPPath"] + "\\" + 
+                fInfo.Name;
             p.StartInfo.WorkingDirectory = path;
             p.StartInfo.UseShellExecute = true;
             p.Start();
 
+            p.WaitForExit();
+
+            if (File.Exists(ConfigurationManager.AppSettings["TMPPath"] + "\\" + fInfo.Name))
+            File.Move(ConfigurationManager.AppSettings["TMPPath"] + "\\" + fInfo.Name, savePath);
+            else
+            {
+                Logger.Message("An error has occured.");
+                return;
+            }
+
             Logger.Message("The data has been exported.");
+        }
+
+        private void AppendCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            MainWindow mv = VisualHelp.FindVisualParentRoot(this) as MainWindow;
+
+            if (mv != null)
+                mv.AddImportTab(((DatasetViewModel)datasetView.SelectedItem).Dataset, Convert.ToInt32(e.Parameter), ImportType.Append);
         }
     }
 }

@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using EcoManager.Data.Entities;
+using EcoManager.Data.Enums;
 using EcoManager.Forms;
-using EcoManager.Shared.Tools;
 
 namespace EcoManager
 {
@@ -33,23 +23,24 @@ namespace EcoManager
 
         public void AddImportTab(Dataset dataset)
         {
-            TabItem t = new TabItem();
-            t.Header = "Import into " + dataset.Title;
-            t.Content = new Import(dataset);
-            
-            tabControl.Items.Add(t);
-            tabControl.SelectedItem = t;
+            AddImportTab(dataset, 0, ImportType.New);
         }
 
         public void AddImportTab(Dataset dataset, int tableId)
         {
+            AddImportTab(dataset, tableId, ImportType.Replace);
+        }
+
+        public void AddImportTab(Dataset dataset, int tableId, ImportType importType)
+        {
             TabItem t = new TabItem();
             t.Header = "Import into " + dataset.Title;
-            t.Content = new Import(dataset, tableId);
+            t.Content = new Import(dataset, tableId, importType);
 
             tabControl.Items.Add(t);
             tabControl.SelectedItem = t;
         }
+
 
         public void RemoveImportTab(FrameworkElement fe)
         {

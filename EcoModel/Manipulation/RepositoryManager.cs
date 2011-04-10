@@ -80,21 +80,22 @@ namespace EcoManager.Data.Manipulation
             if (SchemaInformation == null)
                 return;
 
-            TableInfo ti = new TableInfo();
+            if (DataHolder.ImportType != ImportType.Append)
+            {
+                TableInfo ti = new TableInfo();
 
-            ti.TableDescription = DataHolder.TableDescription;
-            ti.ValidBegin = DateTime.Now;
-            ti.Schema = SchemaInformation;
-            ti.Dataset = workEntity.WorkingDataset;
-            
-            
-            if (DataHolder.ParentTable != null)
-                ti.Parents.Add(DataHolder.ParentTable);
+                ti.TableDescription = DataHolder.TableDescription;
+                ti.ValidBegin = DateTime.Now;
+                ti.Schema = SchemaInformation;
+                ti.Dataset = workEntity.WorkingDataset;
 
-            UnitOfWork.CurrentSession.Save(ti);
-            TableInformation = ti;
+                if (DataHolder.ParentTable != null)
+                    ti.Parents.Add(DataHolder.ParentTable);
 
-            
+                UnitOfWork.CurrentSession.Save(ti);
+                TableInformation = ti;
+            }
+
             if (workEntity != null)
                 workEntity.Completed = true;
 
@@ -108,34 +109,75 @@ namespace EcoManager.Data.Manipulation
             if (workEntity == null)
                 return;
 
-            SchemaInfo schema = new SchemaInfo();
-            schema.ValidBegin = DateTime.Now;
-            //schema.SchemaParent = latestSchema;
-            schema.Name = "Import Demo";
-
-            UnitOfWork.CurrentSession.Save(schema);
-            UnitOfWork.CurrentSession.Flush();
-
-            for (int i = 0; i < DataHolder.Columns.Count;i++ )
+            if (DataHolder.ImportType == ImportType.Append)
             {
-                ImportColumn ic = DataHolder.Columns[i];
+                TableInfo ti = UnitOfWork.CurrentSession.Get<TableInfo>(DataHolder.ParentTable.Id);
 
-                SchemaColumn sc = new SchemaColumn();
-                sc.Name = ic.Name;
-                sc.OrigName = ic.OrigName;
-                sc.Schema = schema;
-                sc.Type = ic.StorageType;
-                sc.ValidBegin = DateTime.Now;
-                sc.ColOrder = i;
-                if (!String.IsNullOrEmpty(ic.DateFormat))
-                    sc.DateFormat = ic.DateFormat;
+                TableInformation = ti;
+                SchemaInformation = ti.Schema;
+
+                DataHolder.Data = new DataSet();
+                DataHolder.Data.ReadXml(new XmlNodeReader(ti.Storage));
+
+                for (int i = 0; i< DataHolder.Columns.Count; i++)
+                {
+                    ImportColumn ic = DataHolder.Columns[i];
+
+                    bool found = false;
+                    foreach (SchemaColumn sc in SchemaInformation.Columns.Where(sc => sc.OrigName == ic.OrigName))
+                        found = true;
+                    
+                    if (!found)
+                    {
+                        SchemaColumn sc = new SchemaColumn();
+                        sc.Name = ic.Name;
+                        sc.OrigName = ic.OrigName;
+                        sc.Schema = SchemaInformation;
+                        sc.Type = ic.StorageType;
+                        sc.ValidBegin = DateTime.Now;
+                        sc.ColOrder = i+1; // The _UniqueRow is already added.
+                        if (!String.IsNullOrEmpty(ic.DateFormat))
+                            sc.DateFormat = ic.DateFormat;
+
+                        UnitOfWork.CurrentSession.Save(sc);
+                        SchemaInformation.Columns.Add(sc);
+
+                        DataHolder.Data.Tables[0].Columns.Add(sc.OrigName);
+                    }
+                    // Loop though the new added stuff.
+                }
+            }
+            else
+            {
+                SchemaInfo schema = new SchemaInfo();
+                schema.ValidBegin = DateTime.Now;
+                //schema.SchemaParent = latestSchema;
+                schema.Name = "Import Demo";
+
+                UnitOfWork.CurrentSession.Save(schema);
+                UnitOfWork.CurrentSession.Flush();
+
+                for (int i = 0; i < DataHolder.Columns.Count;i++ )
+                {
+                    ImportColumn ic = DataHolder.Columns[i];
+
+                    SchemaColumn sc = new SchemaColumn();
+                    sc.Name = ic.Name;
+                    sc.OrigName = ic.OrigName;
+                    sc.Schema = schema;
+                    sc.Type = ic.StorageType;
+                    sc.ValidBegin = DateTime.Now;
+                    sc.ColOrder = i;
+                    if (!String.IsNullOrEmpty(ic.DateFormat))
+                        sc.DateFormat = ic.DateFormat;
                 
-                UnitOfWork.CurrentSession.Save(sc);
-                schema.Columns.Add(sc);
+                    UnitOfWork.CurrentSession.Save(sc);
+                    schema.Columns.Add(sc);
+                }
+
+                SchemaInformation = schema;
             }
 
-            SchemaInformation = schema;
-            
             workEntity.Completed = true;
         }
 
@@ -144,17 +186,53 @@ namespace EcoManager.Data.Manipulation
             if (TableInformation == null)
                 return;
 
-            // Create unique key.
-            DataHolder.StorageTable.Tables[0].Columns.Add("_UniqueRowId");
-            int i = 0;
-            foreach (DataRow dr in DataHolder.StorageTable.Tables[0].Rows)
-                dr["_UniqueRowId"] = i++;
+            if (DataHolder.ImportType == ImportType.Append)
+            {
+                // Retrieve the current data set
+                // Merge the new dataset with the current data set.
+                // Store in the same storage element.
 
+                int lastUniqueId = Int32.Parse(DataHolder.Data.Tables[0].Rows[DataHolder.Data.Tables[0].Rows.Count - 1]["_UniqueRowId"].ToString());
 
-            XmlDataDocument xmlDataDocument = new XmlDataDocument(DataHolder.StorageTable);
+                DataView storageView = DataHolder.StorageTable.Tables[0].DefaultView;
+ 
+               
+                foreach (DataRowView drv in storageView)
+                {
+                    DataRow newRow = DataHolder.Data.Tables[0].NewRow();
 
-            TableInformation.Storage = xmlDataDocument;
-            UnitOfWork.CurrentSession.SaveOrUpdate(TableInformation);
+                    for (int i=0;i<DataHolder.Data.Tables[0].Columns.Count;i++)
+                    {
+                        if (DataHolder.StorageTable.Tables[0].Columns.Contains(DataHolder.Data.Tables[0].Columns[i].ColumnName))
+                            newRow[DataHolder.Data.Tables[0].Columns[i].ColumnName] =
+                                drv[DataHolder.Data.Tables[0].Columns[i].ColumnName];
+
+                    }
+
+                    newRow["_UniqueRowId"] = ++lastUniqueId;
+                    DataHolder.Data.Tables[0].Rows.Add(newRow);
+                }
+
+                XmlDataDocument xmlDataDocument = new XmlDataDocument(DataHolder.Data);
+
+                TableInformation.Storage = xmlDataDocument;
+                UnitOfWork.CurrentSession.SaveOrUpdate(TableInformation);
+                
+            } 
+            else
+            {
+                // Create unique key.
+                DataHolder.StorageTable.Tables[0].Columns.Add("_UniqueRowId");
+                int i = 0;
+                foreach (DataRow dr in DataHolder.StorageTable.Tables[0].Rows)
+                    dr["_UniqueRowId"] = i++;
+
+                XmlDataDocument xmlDataDocument = new XmlDataDocument(DataHolder.StorageTable);
+
+                TableInformation.Storage = xmlDataDocument;
+                UnitOfWork.CurrentSession.SaveOrUpdate(TableInformation);
+            }
+            
 
             if (workEntity != null)
                 workEntity.Completed = true;
@@ -175,37 +253,45 @@ namespace EcoManager.Data.Manipulation
             if (spatialStructures == null)
                 return;
 
-            foreach (SpatialColumnStructure c in spatialStructures.Values)
-            {
-                int i = 0;
-                foreach (DataRowView dr in DataHolder.StorageTable.Tables[0].AsDataView())
-                {
-                    SpatialInfo si = new SpatialInfo 
-                            {
-                                Table = TableInformation, 
-                                RowNr = i++, 
-                                SpatialGroup = c.GroupId
-                            };
 
-                    Double latitude, longtitude;
-                    if (Double.TryParse(dr[c.LatitudeCol].ToString(), out latitude) && Double.TryParse(dr[c.LongtitudeCol].ToString(), out longtitude))
+            if (DataHolder.ImportType == ImportType.Append)
+            {
+                
+            } else
+            {
+                foreach (SpatialColumnStructure c in spatialStructures.Values)
+                {
+                    int i = 0;
+                    foreach (DataRowView dr in DataHolder.StorageTable.Tables[0].AsDataView())
                     {
-                        if ((latitude >= -90 && latitude <= 90) || (longtitude >= -90 && longtitude <= 90))
+                        SpatialInfo si = new SpatialInfo
                         {
-                            si.Location = new Point(latitude, longtitude) {SRID = 4326}; // WGS format.
-                            UnitOfWork.CurrentSession.Save(si);
+                            Table = TableInformation,
+                            RowNr = i++,
+                            SpatialGroup = c.GroupId
+                        };
+
+                        Double latitude, longtitude;
+                        if (Double.TryParse(dr[c.LatitudeCol].ToString(), out latitude) && Double.TryParse(dr[c.LongtitudeCol].ToString(), out longtitude))
+                        {
+                            if ((latitude >= -90 && latitude <= 90) || (longtitude >= -90 && longtitude <= 90))
+                            {
+                                si.Location = new Point(latitude, longtitude) { SRID = 4326 }; // WGS format.
+                                UnitOfWork.CurrentSession.Save(si);
+                            }
+                            else
+                            {
+                                workEntity.Errors.Add(string.Format("Could not store geographic location. Lat: {0} Long: {1}. Coordinates too small or large. Must be within -90 and 90 degrees.", dr[c.LatitudeCol], dr[c.LongtitudeCol]));
+                            }
                         }
                         else
                         {
-                            workEntity.Errors.Add(string.Format("Could not store geographic location. Lat: {0} Long: {1}. Coordinates too small or large. Must be within -90 and 90 degrees.", dr[c.LatitudeCol], dr[c.LongtitudeCol]));
+                            workEntity.Errors.Add("Could not store geographic location. Lat: " + dr[c.LatitudeCol] + " Long: " + dr[c.LongtitudeCol]);
                         }
-                    } 
-                    else
-                    {
-                        workEntity.Errors.Add("Could not store geographic location. Lat: " + dr[c.LatitudeCol] + " Long: " + dr[c.LongtitudeCol]);
                     }
                 }
             }
+            
 
             if (workEntity != null)
                 workEntity.Completed = true;
@@ -219,21 +305,33 @@ namespace EcoManager.Data.Manipulation
             if (TableInformation == null)
                 return;
 
+            if (DataHolder.ImportType == ImportType.Append)
+            {
+                UnitOfWork.CurrentSession.CreateSQLQuery("DELETE FROM TemporalPoint WHERE TableId = " + TableInformation.Id).ExecuteUpdate();
+                UnitOfWork.CurrentSession.CreateSQLQuery("DELETE FROM TemporalLength WHERE TableId = " + TableInformation.Id).ExecuteUpdate();
+                UnitOfWork.CurrentSession.CreateSQLQuery("DELETE FROM TemporalInterval WHERE TableId = " + TableInformation.Id).ExecuteUpdate();
+
+
+            }
+
             Dictionary<int, TemporalColumnStructure> temporalStructures = GetTemporalStructures();
 
             if (temporalStructures == null)
                 return;
 
             CultureInfo provider = CultureInfo.InvariantCulture;
-            
+
 
             foreach (TemporalColumnStructure c in temporalStructures.Values)
             {
                 int i = 0;
-                foreach (DataRowView dr in DataHolder.StorageTable.Tables[0].AsDataView())
+                DataSet ds = DataHolder.StorageTable;
+                if (DataHolder.ImportType == ImportType.Append)
+                    ds = DataHolder.Data;
+                foreach (DataRowView dr in ds.Tables[0].AsDataView())
                 {
-                    if (i > 1000)
-                        break;
+                    //if (i > 1000)
+                    //    break;
 
                     TemporalBase tb = TemporalFactory.GetNewTemporal(c.TimeType);
                     tb.Table = TableInformation;
@@ -253,17 +351,17 @@ namespace EcoManager.Data.Manipulation
                         {
                             case TimeTypes.Point:
 
-                                ((TemporalPoint) tb).Point = begin;
+                                ((TemporalPoint)tb).Point = begin;
                                 break;
                             case TimeTypes.Interval:
-                                ((TemporalInterval) tb).TimeBegin = begin;
-                                ((TemporalInterval) tb).TimeEnd = 
-                                    String.IsNullOrEmpty(c.DateFormat) ? 
-                                        Convert.ToDateTime(dr[c.TimeEndCol], null) : 
+                                ((TemporalInterval)tb).TimeBegin = begin;
+                                ((TemporalInterval)tb).TimeEnd =
+                                    String.IsNullOrEmpty(c.DateFormat) ?
+                                        Convert.ToDateTime(dr[c.TimeEndCol], null) :
                                         DateTime.ParseExact(dr[c.TimeEndCol].ToString(), c.DateFormat, provider);
                                 break;
                             case TimeTypes.Length:
-                                ((TemporalLength) tb).Length = begin;
+                                ((TemporalLength)tb).Length = begin;
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -271,7 +369,7 @@ namespace EcoManager.Data.Manipulation
                         UnitOfWork.CurrentSession.Save(tb);
                     }
 
-                    
+
                 }
 
                 if (c.GroupId == 0)
@@ -280,20 +378,21 @@ namespace EcoManager.Data.Manipulation
 
                     if (c.TimeType == TimeTypes.Point)
                     {
-                       var o = UnitOfWork.CurrentSession.CreateSQLQuery("SELECT MIN(TimePoint) as Minimum, MAX(TimePoint) as Maximum FROM TemporalPoint WHERE tableId = " +
-                                                                 TableInformation.Id + " AND TemporalGroup = 0")
-                                                                 .AddScalar("Minimum", NHibernateUtil.DateTime2)
-                                                                 .AddScalar("Maximum", NHibernateUtil.DateTime2).UniqueResult<object[]>();
+                        var o = UnitOfWork.CurrentSession.CreateSQLQuery("SELECT MIN(TimePoint) as Minimum, MAX(TimePoint) as Maximum FROM TemporalPoint WHERE tableId = " +
+                                                                    TableInformation.Id + " AND TemporalGroup = 0")
+                                                                    .AddScalar("Minimum", NHibernateUtil.DateTime2)
+                                                                    .AddScalar("Maximum", NHibernateUtil.DateTime2).UniqueResult<object[]>();
 
-                        TableInformation.ValidBegin = (DateTime) o[0];;
-                        TableInformation.ValidEnd = (DateTime) o[1];;
+                        TableInformation.ValidBegin = (DateTime)o[0]; ;
+                        TableInformation.ValidEnd = (DateTime)o[1]; ;
                         UnitOfWork.CurrentSession.Update(TableInformation);
-                    } else if (c.TimeType == TimeTypes.Interval)
+                    }
+                    else if (c.TimeType == TimeTypes.Interval)
                     {
                         var o = UnitOfWork.CurrentSession.CreateSQLQuery("SELECT MIN(TimeBegin) as Minimum, MAX(TimeEnd) as Maximum FROM TemporalPoint WHERE tableId = " +
-                                                                 TableInformation.Id + " AND TemporalGroup = 0")
-                                                                 .AddScalar("Minimum", NHibernateUtil.DateTime2)
-                                                                 .AddScalar("Maximum", NHibernateUtil.DateTime2).UniqueResult<object[]>();
+                                                                    TableInformation.Id + " AND TemporalGroup = 0")
+                                                                    .AddScalar("Minimum", NHibernateUtil.DateTime2)
+                                                                    .AddScalar("Maximum", NHibernateUtil.DateTime2).UniqueResult<object[]>();
 
                         TableInformation.ValidBegin = (DateTime)o[0]; ;
                         TableInformation.ValidEnd = (DateTime)o[1]; ;
@@ -301,6 +400,9 @@ namespace EcoManager.Data.Manipulation
                     }
                 }
             }
+            
+
+
 
             if (workEntity != null)
                 workEntity.Completed = true;

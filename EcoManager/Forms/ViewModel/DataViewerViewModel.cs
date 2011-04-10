@@ -14,7 +14,7 @@ namespace EcoManager.Forms.ViewModel
     {
         public Window HostWindow { get; set; }
 
-        public DataSet DataHolder = new DataSet();
+        public DataSet DataSetHolder = new DataSet();
 
         public DataViewerViewModel(Window hostWindow)
         {
@@ -28,14 +28,14 @@ namespace EcoManager.Forms.ViewModel
                 TableInfo ti = UnitOfWork.CurrentSession.Get<TableInfo>(tableId);
                 if (ti != null)
                 {
-                    DataHolder.ReadXml(new XmlNodeReader(ti.Storage));
+                    DataSetHolder.ReadXml(new XmlNodeReader(ti.Storage));
 
                     foreach (SchemaColumn sc in ti.Schema.Columns)
-                        DataHolder.Tables[0].Columns[sc.ColOrder].ColumnName = sc.Name;
+                        DataSetHolder.Tables[0].Columns[sc.ColOrder].ColumnName = sc.Name;
                 } 
                 else
                 {
-                    DataHolder.Clear();
+                    DataSetHolder.Clear();
                     MessageBox.Show("No information was found at the database id. The database might be inconsistent.");
                 }
             }

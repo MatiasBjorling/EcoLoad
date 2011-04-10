@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using EcoManager.Data.Enums;
 using EcoManager.Data.Proxies;
 using NHibernate.Validator.Constraints;
 
@@ -12,6 +13,10 @@ namespace EcoManager.Data.Entities.NonRel
     {
         public List<ImportColumn> Columns { get; set; }
         public Dataset DatasetParent { get; set; }
+
+        public DataSet Data;
+
+        public ImportType ImportType { get; set; }
 
         private string tableDescription = String.Empty;
         [Length(1, 255, Message = "Please enter a description first.")]

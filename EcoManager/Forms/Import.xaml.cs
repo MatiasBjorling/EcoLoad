@@ -25,6 +25,8 @@ namespace EcoManager.Forms
 
         private readonly ImportViewModel model;
 
+        private ImportType importType = ImportType.New;
+
         public Import()
         {
             InitializeComponent();
@@ -35,13 +37,18 @@ namespace EcoManager.Forms
             model = new ImportViewModel(dataset);
             model.UControl = this;
             DataContext = model;
-
-            
         }
 
         public Import(Dataset dataset, int tableId) : this(dataset)
         {
             model.SetParentTableFromId(tableId);
+            this.importType = ImportType.Replace;
+        }
+
+        public Import(Dataset dataset, int tableId, ImportType importType) : this(dataset)
+        {
+            model.SetParentTableFromId(tableId);
+            this.importType = importType;
         }
 
 
@@ -58,6 +65,12 @@ namespace EcoManager.Forms
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
+            if (!File.Exists(model.ImportPath))
+            {
+                MessageBox.Show("File is not found or is not selected.");
+                return;
+            }
+                
             dgPreview.ItemsSource = model.GridData;
 
             DataTemplate dtemplate = (DataTemplate)dgPreview.FindResource("ColumnHeaderDataTemplate");
@@ -170,6 +183,8 @@ namespace EcoManager.Forms
                 MessageBox.Show(sb.ToString());
                 return;
             }
+
+            model.Data.ImportType = importType;
 
             ImportExportProgress progresser = new ImportExportProgress();
             progresser.Execute(model.LoadDataset());

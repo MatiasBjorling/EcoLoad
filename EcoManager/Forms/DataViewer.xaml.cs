@@ -30,7 +30,7 @@ namespace EcoManager.Forms.ViewModel
         public void Load(int tableId)
         {
             Model.Load(tableId);
-            dataGrid1.ItemsSource = Model.DataHolder.Tables[0].DefaultView;
+            dataGrid1.ItemsSource = Model.DataSetHolder.Tables[0].DefaultView;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -16,7 +15,6 @@ using LumenWorks.Framework.IO.Csv;
 using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Transform;
-using NHibernate.Validator.Constraints;
 
 namespace EcoManager.Forms.ViewModel
 {
@@ -27,7 +25,7 @@ namespace EcoManager.Forms.ViewModel
         private UnitOfWorkImpl uowImpl;
 
 
-        private string importPath = "C:\\Users\\Matias Bjørling\\Desktop\\2008s1.csv";
+        private string importPath = String.Empty;
         public string ImportPath
         {
             get { return importPath; }

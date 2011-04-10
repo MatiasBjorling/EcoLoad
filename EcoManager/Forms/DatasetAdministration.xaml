@@ -7,6 +7,7 @@
         <CommandBinding x:Name="ShowCommand" Command="BrowseForward" Executed="ShowCommand_Executed"/>
         <CommandBinding x:Name="ReplaceCommand" Command="Replace" Executed="ReplaceCommand_Executed"/>
         <CommandBinding x:Name="ExportCommand" Command="BrowseBack" Executed="ExportCommand_Executed"/>
+        <CommandBinding x:Name="AppendCommand" Command="BrowseHome" Executed="AppendCommand_Executed"/>
     </UserControl.CommandBindings>
     <UserControl.Resources>
 		<SolidColorBrush x:Key="ListBorder" Color="#828790"/>
@@ -19,7 +20,6 @@
 			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
 			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
 			<Setter Property="ScrollViewer.PanningMode" Value="Both"/>
-			<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 			<Setter Property="Template">
 				<Setter.Value>
@@ -117,6 +117,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="Show" Command="BrowseForward" CommandParameter="{Binding Path=Id}" Margin="0,0,2,0" />
                                 <Button Content="Replace" Command="Replace" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />
+                                <Button Content="Append" Command="BrowseHome" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />
                                 <!--<Button Content="Visualize" Command="BrowseBack" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />-->
                                 <Button Content="Export" Command="BrowseBack" CommandParameter="{Binding Path=Id}" HorizontalAlignment="Center" Margin="0,0,2,0" />
                             </StackPanel>
